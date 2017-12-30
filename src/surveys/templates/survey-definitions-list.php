@@ -38,6 +38,28 @@ $sessionUser = $_SESSION['user'];
 
 
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
+  $(document).ready(function(){
+    window.CRM.surveyDefinitionsDataTable = $("#surveyDefinitions").DataTable({
+      "language": {
+        "url": window.CRM.plugin.dataTable.language.url
+      },
+      responsive: true,
+      ajax: {
+        url: window.CRM.root + "/api/surveys/definitions",
+        dataSrc: "SurveyDefinitions"
+      },
+      columns: [
+        {
+          width: 'auto',
+          title: 'Survey Definition Name',
+          data: 'name',
+          render: function (data, type, full, meta) {
+            return "<a href='"+window.CRM.root+"/surveys/definitions/"+full.survey_definition_id+"/edit'>"+full.name+"</a>"
+          }
+        }
+      ]
+    });
+  });
 </script>
 
 
