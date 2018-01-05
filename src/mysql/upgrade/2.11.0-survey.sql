@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `survey_definitions`;
 CREATE TABLE `survey_definitions` (
-  `survey_definition_id` INT NOT NULL,
+  `survey_definition_id` INT NOT NULL auto_increment,
   `name` VARCHAR(256) NOT NULL,
   `definition` text,
   `owner_per_id` mediumint(9) unsigned NOT NULL,
@@ -9,10 +9,10 @@ CREATE TABLE `survey_definitions` (
 
 DROP TABLE IF EXISTS `survey_responses`;
 CREATE TABLE `survey_responses` (
-  `survey_response_id` INT NOT NULL,
+  `survey_response_id` INT NOT NULL auto_increment,
   `survey_definition_id` INT NOT NULL,
   `response` text,
-  PRIMARY KEY (`survey_definition_id`)
+  PRIMARY KEY (`survey_response_id`)
 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 ALTER TABLE tokens
