@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `survey_definitions`;
 CREATE TABLE `survey_definitions` (
   `survey_definition_id` INT NOT NULL,
   `name` VARCHAR(256) NOT NULL,
@@ -6,6 +7,7 @@ CREATE TABLE `survey_definitions` (
   PRIMARY KEY (`survey_definition_id`)
 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `survey_responses`;
 CREATE TABLE `survey_responses` (
   `survey_response_id` INT NOT NULL,
   `survey_definition_id` INT NOT NULL,
@@ -13,6 +15,5 @@ CREATE TABLE `survey_responses` (
   PRIMARY KEY (`survey_definition_id`)
 ) ENGINE=InnoDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-ALTER TABLE token 
- ADD COLUMN `meta_data` text AFTER `remainingUses`,
-
+ALTER TABLE tokens
+ ADD COLUMN `meta_data` text AFTER `remainingUses`;
