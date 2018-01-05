@@ -36,10 +36,10 @@ $sessionUser = $_SESSION['user'];
 </div>
 
 
-
+<script src="<?= SystemURLs::getRootPath() ?>/skin/js/Surveys.js"></script>
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
   $(document).ready(function(){
-    window.CRM.surveyDefinitionsDataTable = $("#surveyDefinitions").DataTable({
+    window.CRM.surveys.DefinitionsDataTable = $("#surveyDefinitions").DataTable({
       "language": {
         "url": window.CRM.plugin.dataTable.language.url
       },
@@ -59,6 +59,15 @@ $sessionUser = $_SESSION['user'];
         }
       ]
     });
+    
+    $("#addNewSurveyDefinition").click(function() {
+      var surveyDefinitionName = $("#surveyDefinitionName").val();
+      console.log("creating survey name: " + surveyDefinitionName);
+      window.CRM.surveys.new(surveyDefinitionName).done(function() {
+        window.CRM.surveys.DefinitionsDataTable.reload();
+      })
+    });
+    
   });
 </script>
 
