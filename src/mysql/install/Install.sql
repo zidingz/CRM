@@ -1343,6 +1343,7 @@ CREATE TABLE `survey_definitions` (
 
 CREATE TABLE `survey_responses` (
   `survey_response_id` INT NOT NULL auto_increment,
+  `date_submitted` DATETIME default NULL,
   `survey_definition_id` INT NOT NULL,
   `response` text,
   PRIMARY KEY (`survey_response_id`)

@@ -855,8 +855,9 @@
     
     <table name="survey_responses" idMethod="native" phpName="SurveyResponse">
         <column name="survey_response_id" phpName="SurveyResponseId" type="SMALLINT" size="9" primaryKey="true" required="true" autoIncrement="true"/>
+        <column name="date_submitted" phpName="DateSubmitted" type="TIMESTAMP"/>
         <column name="survey_definition_id" phpName="SurveyDefinitionId" type="SMALLINT" size="9" required="true"/>
-        <column name="response" phpName="name" type="VARCHAR" required="true"/>
+        <column name="response" phpName="ResponseData" type="VARCHAR" required="true"/>
          <foreign-key foreignTable="survey_definitions">
             <reference local="survey_definition_id" foreign="survey_definition_id"/>
         </foreign-key>

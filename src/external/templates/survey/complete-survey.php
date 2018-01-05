@@ -25,7 +25,7 @@ require(SystemURLs::getDocumentRoot(). "/Include/HeaderNotLoggedIn.php");
                 $headerHTML = $sChurchName;
             }
             ?>
-            <a href="<?= SystemURLs::getRootPath() ?>/"><?= $headerHTML ?></a>
+            <a href="#"><?= $headerHTML ?></a>
         </div>
 
 
@@ -44,8 +44,19 @@ $(document).ready(function() {
   });
   
 function sendDataToServer(survey) {
-  var resultAsString = JSON.stringify(survey.data);
-  alert(resultAsString); //send Ajax request to your web server.
+ 
+  
+  toSend = JSON.stringify({
+    responses: survey.data
+  });
+  console.log(toSend);
+  $.ajax({
+    method: "POST",
+    path: window.CRM.root + "/external/survey/<?= $token->getToken()?>",
+    dataType: 'json',
+    contentType:  "application/json",
+    data:toSend
+  });
 }
   </script>
 <?php

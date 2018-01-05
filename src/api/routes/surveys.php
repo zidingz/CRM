@@ -6,6 +6,9 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use ChurchCRM\Map\SurveyDefinitionTableMap;
 use ChurchCRM\Map\PersonTableMap;
 use ChurchCRM\SurveyDefinition;
+use ChurchCRM\SurveyResponseQuery;
+use ChurchCRM\Map\SurveyResponseTableMap;
+
 $app->group('/surveys', function () {
 
     $this->get('/definitions', function ($request, $response, $args) {
@@ -41,6 +44,17 @@ $app->group('/surveys', function () {
         $survey->setDefinition($surveySettings->definition);
         $survey->save();
         echo $survey->toJSON();
+    });
+    
+     $this->get('/responses', function ($request, $response, $args) {
+        $SurveyResponses = SurveyResponseQuery::create()
+                ->joinSurveyDefinition()
+                ->withColumn(SurveyResponseTableMap::COL_SURVEY_RESPONSE_ID)
+                ->withColumn(SurveyResponseTableMap::COL_DATE_SUBMITTED)
+                ->withColumn(SurveyDefinitionTableMap::COL_NAME)
+                ->withColumn(SurveyDefinitionTableMap::COL_SURVEY_DEFINITION_ID)
+                ->find();
+        return $response->write($SurveyResponses->toJSON());
     });
     
     
