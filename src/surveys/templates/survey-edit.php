@@ -19,13 +19,18 @@ $sessionUser = $_SESSION['user'];
 
 
 <div id="surveyEditorContainer"></div>
-
+<script src="<?= SystemURLs::getRootPath() ?>/skin/js/Surveys.js"></script>
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
  var editorOptions = {showEmbededSurveyTab: false}; //see examples below
   var survey = new SurveyEditor.SurveyEditor("surveyEditorContainer", editorOptions);
   //set function on save callback
 
   survey.text= <?= json_encode($survey->getdefinition()) ?>;
+  survey.saveSurveyFunc = function() {
+    window.CRM.surveys.saveDefinition(<?= $survey->getSurveyDefinitionId() ?>, survey.text)
+  }
+
+ 
 </script>
 
 

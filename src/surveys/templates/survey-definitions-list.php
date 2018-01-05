@@ -54,7 +54,24 @@ $sessionUser = $_SESSION['user'];
           title: 'Survey Definition Name',
           data: 'name',
           render: function (data, type, full, meta) {
-            return "<a href='"+window.CRM.root+"/surveys/definitions/"+full.survey_definition_id+"/edit'>"+full.name+"</a>"
+            return "<a href='"+window.CRM.root+"/surveys/definitions/"+full.SurveyDefinitionId+"/edit'>"+full.name+"</a>"
+          }
+        },
+        {
+          width: 'auto',
+          title: 'Owner',
+          data: 'OwnerPersonID',
+          render: function (data, type, full, meta) {
+            return "<a href='"+window.CRM.root+"/PersonView.php?PersonID="+data+"'>"+full.person_perper_FirstName+"</a>"
+          }
+        }
+        ,
+        {
+          width: 'auto',
+          title: 'Responses',
+          data: 'Responses',
+          render: function (data, type, full, meta) {
+            return "<a href='"+window.CRM.root+"/surveys/definitions/"+full.SurveyDefinitionId+"/responses'>"+data+"</a>"
           }
         }
       ]
@@ -64,7 +81,7 @@ $sessionUser = $_SESSION['user'];
       var surveyDefinitionName = $("#surveyDefinitionName").val();
       console.log("creating survey name: " + surveyDefinitionName);
       window.CRM.surveys.new(surveyDefinitionName).done(function() {
-        window.CRM.surveys.DefinitionsDataTable.reload();
+        window.CRM.surveys.DefinitionsDataTable.ajax.reload();
       })
     });
     
