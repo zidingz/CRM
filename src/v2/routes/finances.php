@@ -53,6 +53,8 @@ function getDepositById(Request $request, Response $response, array $args) {
             'sRootPath' => SystemURLs::getRootPath(),
             'sPageTitle' => gettext('Deposit Slip Number: ') . $thisDeposit->getId(),
             'thisDeposit' => $thisDeposit,
+            'fundData' => GetFundData($thisDeposit),
+            'pledgeTypeData' => GetPledgeTypeData($thisDeposit),
             'PageJSVars' => []
         ];
         if ($thisDeposit->getType() == 'Bank') {
@@ -69,4 +71,36 @@ function getDepositById(Request $request, Response $response, array $args) {
         SessionUser::getUser()->save();
         return $renderer->render($response, 'depositEditor.php', $pageArgs);
     }
+}
+
+function GetFundData($thisDeposit) {
+  $fundData = [];
+  foreach ($thisDeposit->getFundTotals() as $tmpfund) {
+      $fund = new StdClass();
+      $fund->color = '#'.random_color();
+      $fund->highlight = '#'.random_color();
+      $fund->label = $tmpfund['Name'];
+      $fund->value = $tmpfund['Total'];
+      array_push($fundData, $fund);
+  }
+  return $fundData;
+}
+  
+function GetPledgeTypeData($thisDeposit)
+{
+  $pledgeTypeData = [];
+  $t1 = new stdClass();
+  $t1->value = $thisDeposit->getTotalamount() ? $thisDeposit->getTotalCash() : '0';
+  $t1->color = '#197A05';
+  $t1->highlight = '#4AFF23';
+  $t1->label = 'Cash';
+  array_push($pledgeTypeData, $t1);
+  $t1 = new stdClass();
+  $t1->value = $thisDeposit->getTotalamount() ? $thisDeposit->getTotalChecks() : '0';
+  $t1->color = '#003399';
+  $t1->highlight = '#3366ff';
+  $t1->label = 'Checks';
+  array_push($pledgeTypeData, $t1);
+  return $pledgeTypeData;
+  
 }
