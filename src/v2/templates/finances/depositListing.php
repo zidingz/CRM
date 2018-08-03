@@ -1,34 +1,11 @@
 <?php
-/*******************************************************************************
- *
- *  filename    : FindDepositSlip.php
- *  last change : 2016-02-28
- *  website     : http://www.churchcrm.io
- *  copyright   : Copyright 2016 ChurchCRM
-  *
- ******************************************************************************/
-
-//Include the function library
-require 'Include/Config.php';
-require 'Include/Functions.php';
 
 use ChurchCRM\dto\SystemURLs;
-use ChurchCRM\Utils\RedirectUtils;
 
-$iDepositSlipID = $_SESSION['iCurrentDeposit'];
+require SystemURLs::getDocumentRoot() . '/Include/SimpleConfig.php';
+require SystemURLs::getDocumentRoot() . '/Include/Header.php';
 
-//Set the page title
-$sPageTitle = gettext('Deposit Listing');
-
-// Security: User must have finance permission to use this form
-if (!$_SESSION['user']->isFinanceEnabled()) {
-    RedirectUtils::Redirect('index.php');
-    exit;
-}
-
-require 'Include/Header.php';
 ?>
-
 <div class="box">
   <div class="box-header with-border">
     <h3 class="box-title"><?php echo gettext('Add New Deposit: '); ?></h3>
@@ -123,4 +100,6 @@ require 'Include/Header.php';
   });
 </script>
 
-<?php require "Include/Footer.php" ?>
+<?php
+require SystemURLs::getDocumentRoot() . '/Include/Footer.php';
+?>

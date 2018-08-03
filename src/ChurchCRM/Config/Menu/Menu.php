@@ -138,7 +138,7 @@ class Menu
     private static function getDepositsMenu()
     {
         $depositsMenu = new MenuItem(gettext("Deposit"), "", SystemConfig::getBooleanValue("bEnabledFinance") && SessionUser::getUser()->isFinanceEnabled(), 'fa-bank');
-        $depositsMenu->addSubMenu(new MenuItem(gettext("View All Deposits"), "FindDepositSlip.php", SessionUser::getUser()->isFinanceEnabled()));
+        $depositsMenu->addSubMenu(new MenuItem(gettext("View All Deposits"), "v2/deposits", SessionUser::getUser()->isFinanceEnabled()));
         $depositsMenu->addSubMenu(new MenuItem(gettext("Deposit Reports"), "FinancialReports.php", SessionUser::getUser()->isFinanceEnabled()));
         $depositsMenu->addSubMenu(new MenuItem(gettext("Edit Deposit Slip"), "DepositSlipEditor.php?DepositSlipID=".$_SESSION['iCurrentDeposit'], SessionUser::getUser()->isFinanceEnabled()));
         $depositsMenu->addCounter(new MenuCounter("iCurrentDeposit", "bg-green", $_SESSION['iCurrentDeposit']));
