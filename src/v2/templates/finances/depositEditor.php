@@ -1,72 +1,10 @@
 <?php
-/*******************************************************************************
- *
- *  filename    : DepositSlipEditor.php
- *  last change : 2014-12-14
- *  website     : http://www.churchcrm.io
- *  copyright   : Copyright 2001, 2002, 2003-2014 Deane Barker, Chris Gebhardt, Michael Wilt
-  *
- ******************************************************************************/
 
-//Include the function library
-require 'Include/Config.php';
-require 'Include/Functions.php';
-
-use ChurchCRM\DepositQuery;
 use ChurchCRM\dto\SystemURLs;
-use ChurchCRM\Utils\InputUtils;
-use ChurchCRM\Utils\RedirectUtils;
 
-$iDepositSlipID = 0;
-$thisDeposit = 0;
+require SystemURLs::getDocumentRoot() . '/Include/SimpleConfig.php';
+require SystemURLs::getDocumentRoot() . '/Include/Header.php';
 
-if (array_key_exists('DepositSlipID', $_GET)) {
-    $iDepositSlipID = InputUtils::LegacyFilterInput($_GET['DepositSlipID'], 'int');
-}
-
-if ($iDepositSlipID) {
-    $thisDeposit = DepositQuery::create()->findOneById($iDepositSlipID);
-    // Set the session variable for default payment type so the new payment form will come up correctly
-    if ($thisDeposit->getType() == 'Bank') {
-        $_SESSION['idefaultPaymentMethod'] = 'CHECK';
-    } elseif ($thisDeposit->getType() == 'CreditCard') {
-        $_SESSION['idefaultPaymentMethod'] = 'CREDITCARD';
-    } elseif ($thisDeposit->getType() == 'BankDraft') {
-        $_SESSION['idefaultPaymentMethod'] = 'BANKDRAFT';
-    } elseif ($thisDeposit->getType() == 'eGive') {
-        $_SESSION['idefaultPaymentMethod'] = 'EGIVE';
-    }
-
-    // Security: User must have finance permission or be the one who created this deposit
-    if (!($_SESSION['user']->isFinanceEnabled() || $_SESSION['user']->getId() == $thisDeposit->getEnteredby())) {
-        RedirectUtils::Redirect('Menu.php');
-        exit;
-    }
-} elseif ($iDepositSlipID == 0) {
-    RedirectUtils::Redirect('FindDepositSlip.php');
-    exit;
-} else {
-    RedirectUtils::Redirect('Menu.php');
-}
-
-//Set the page title
-$sPageTitle = $thisDeposit->getType().' '.gettext('Deposit Slip Number: ').$iDepositSlipID;
-
-//Is this the second pass?
-if (isset($_POST['DepositSlipLoadAuthorized'])) {
-    $thisDeposit->loadAuthorized();
-} elseif (isset($_POST['DepositSlipRunTransactions'])) {
-    $thisDeposit->runTransactions();
-}
-
-$_SESSION['iCurrentDeposit'] = $iDepositSlipID;  // Probably redundant
-
-/* @var $currentUser User */
-$currentUser = $_SESSION['user'];
-$currentUser->setCurrentDeposit($iDepositSlipID);
-$currentUser->save();
-
-require 'Include/Header.php';
 ?>
 <div class="row">
   <div class="col-lg-7">
@@ -147,11 +85,11 @@ require 'Include/Header.php';
     <h3 class="box-title"><?php echo gettext('Payments on this deposit slip:'); ?></h3>
     <div class="pull-right">
       <?php
-      if ($iDepositSlipID and $thisDeposit->getType() and !$thisDeposit->getClosed()) {
+      if ($thisDeposit->getClosed()) {
           if ($thisDeposit->getType() == 'eGive') {
-              echo '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=$iDepositSlipID&linkBack=DepositSlipEditor.php?DepositSlipID=$iDepositSlipID&PledgeOrPayment=Payment&CurrentDeposit=$iDepositSlipID';\">";
+              echo '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=".$thisDeposit->getId()."&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
           } else {
-              echo '<input type=button class="btn btn-success" value="'.gettext('Add Payment')."\" name=AddPayment onclick=\"javascript:document.location='PledgeEditor.php?CurrentDeposit=$iDepositSlipID&PledgeOrPayment=Payment&linkBack=DepositSlipEditor.php?DepositSlipID=$iDepositSlipID&PledgeOrPayment=Payment&CurrentDeposit=$iDepositSlipID';\">";
+              echo '<input type=button class="btn btn-success" value="'.gettext('Add Payment')."\" name=AddPayment onclick=\"javascript:document.location='PledgeEditor.php?CurrentDeposit=".$thisDeposit->getId()."&PledgeOrPayment=Payment&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
           }
           if ($thisDeposit->getType() == 'BankDraft' || $thisDeposit->getType() == 'CreditCard') {
               ?>
@@ -166,7 +104,7 @@ require 'Include/Header.php';
   <div class="box-body">
     <table class="table" id="paymentsTable" width="100%"></table>
     <?php
-    if ($iDepositSlipID and $thisDeposit->getType() and !$thisDeposit->getClosed()) {
+    if (!$thisDeposit->getClosed()) {
         if ($thisDeposit->getType() == 'Bank') {
             ?>
         <button type="button" id="deleteSelectedRows"  class="btn btn-danger" disabled>Delete Selected Rows</button>
@@ -206,7 +144,7 @@ require 'Include/Header.php';
 
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
   var depositType = '<?php echo $thisDeposit->getType(); ?>';
-  var depositSlipID = <?php echo $iDepositSlipID; ?>;
+  var depositSlipID = <?php echo $thisDeposit->getId(); ?>;
   var isDepositClosed = Boolean(<?=  $thisDeposit->getClosed(); ?>);
   var fundData = <?= json_encode($fundData) ?>;
   var pledgeData = <?= json_encode($pledgeTypeData) ?>;
@@ -255,6 +193,7 @@ require 'Include/Header.php';
     });
   });
 </script>
-<?php
-  require 'Include/Footer.php';
+
+<?php 
+require SystemURLs::getDocumentRoot() . '/Include/Footer.php';
 ?>
