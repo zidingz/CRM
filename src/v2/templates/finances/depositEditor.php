@@ -85,7 +85,7 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
     <h3 class="box-title"><?php echo gettext('Payments on this deposit slip:'); ?></h3>
     <div class="pull-right">
       <?php
-      if ($thisDeposit->getClosed()) {
+      if (!$thisDeposit->getClosed()) {
           if ($thisDeposit->getType() == 'eGive') {
               echo '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=".$thisDeposit->getId()."&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
           } else {
