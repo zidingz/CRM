@@ -12,6 +12,7 @@ require 'Include/Config.php';
 require 'Include/Functions.php';
 
 use ChurchCRM\dto\SystemURLs;
+use ChurchCRM\CalendarQuery;
 
 //Set the page title
 $sPageTitle = gettext('Kiosk Manager');
@@ -48,24 +49,21 @@ require 'Include/Header.php';
 </div>
 
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
-  
+  window.CRM.calendars = <?= json_encode(CalendarQuery::create()->find()->toArray()); ?>;
   function renderKioskAssignment(data) {
 
     if(data.Accepted){
       var options ='<option value="None">None</option>';
       var currentAssignment = data.KioskAssignments[0];
-      for (var i=0; i < window.CRM.events.futureEvents.length; i++)
+      for (var i=0; i < window.CRM.calendars.length; i++)
       {
-        var event = window.CRM.events.futureEvents[i];
+        var calendar = window.CRM.calendars[i];
+        var selected = '';
         if (currentAssignment !== undefined && currentAssignment.EventId === event.Id)
         {
-          options += '<option selected value="1-'+event.Id+'">Event - '+event.Title+'</option>';
+          selected = " selected "
         }
-        else
-        {
-          options += '<option value="1-'+event.Id+'">Event - '+event.Title+'</option>';
-        }
-
+        options += '<option '+selected+' value="C-'+calendar.Id+'">Calendar - '+calendar.Name+'</option>';
       }
     
         return '<select class="assignmentMenu" data-kioskid="'+data.Id+'">'+ options +'</select>';
