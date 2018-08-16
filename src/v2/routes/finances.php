@@ -12,6 +12,8 @@ $app->group('/deposits', function () {
     $this->get('/', 'getDeposits');
     $this->get('', 'getDeposits');
     $this->get('/{id}', 'getDepositById');
+    $this->get('/{id}/newPayment', 'newPayment');
+    $this->get('/{id}/{groupKey}', 'editPayment');
 });
 
 function getDeposits(Request $request, Response $response, array $args) {
@@ -74,7 +76,9 @@ function getDepositById(Request $request, Response $response, array $args) {
           if ($thisDeposit->getType() == 'eGive') {
             $pageArgs['AddPaymentButton'] = '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=".$thisDeposit->getId()."&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
           } else {
-            $pageArgs['AddPaymentButton'] = '<input type=button class="btn btn-success" value="'.gettext('Add Payment')."\" name=AddPayment onclick=\"javascript:document.location='PledgeEditor.php?CurrentDeposit=".$thisDeposit->getId()."&PledgeOrPayment=Payment&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
+            $pageArgs['AddPaymentButton'] = '<a class="btn btn-success"'.
+                    'href="'.$request->getUri().'/newPayment"'.
+                    '>'.gettext('Add Payment')."</a>";
           }
           if ($thisDeposit->getType() == 'BankDraft' || $thisDeposit->getType() == 'CreditCard') {
             $pageArgs['AddPaymentButton'] = '<input type="submit" class="btn btn-success" value="' . gettext('Load Authorized Transactions'). '" name="DepositSlipLoadAuthorized">'.
@@ -116,4 +120,20 @@ function GetPledgeTypeData($thisDeposit)
   array_push($pledgeTypeData, $t1);
   return $pledgeTypeData;
   
+}
+
+function newPayment(Request $request, Response $response, array $args) {
+    $renderer = new PhpRenderer('templates/finances/');
+
+    $pageArgs = [
+        'sRootPath' => SystemURLs::getRootPath(),
+        'sPageTitle' => gettext('Payment Editor'),
+        'PageJSVars' => []
+    ];
+
+    if (!SessionUser::getUser()->isFinance()) {
+        return $response->withRedirect(SystemURLs::getRootPath());
+    } else {
+        return $renderer->render($response, 'payment.php', $pageArgs);
+    }
 }
