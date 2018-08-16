@@ -25,10 +25,10 @@ class KioskDevice extends BaseKioskDevice
   
   public function getActiveAssignment()
   {
-    return $this->getKioskAssignments()[0];
+    return new KioskAssignment($this->getAssignmentData());
   }
   
-  public function setAssignment($assignmentType,$eventId)
+  public function setAssignment($assignmentType,$assignmentData)
   {
     $assignment = $this->getActiveAssignment();
     if (is_null($assignment))
@@ -37,7 +37,7 @@ class KioskDevice extends BaseKioskDevice
       $assignment->setKioskDevice($this);
     }
     $assignment->setAssignmentType($assignmentType);
-    $assignment->setEventId($eventId);
+    $assignment->setAssignmentData($assignmentData);
     $assignment->save();
   }
   
@@ -49,7 +49,7 @@ class KioskDevice extends BaseKioskDevice
     $assignmentJSON = null;
     $assignment = $this->getActiveAssignment();
     
-    if (isset($assignment) && $assignment->getAssignmentType() == dto\KioskAssignmentTypes::EVENTATTENDANCEKIOSK )
+    if ($assignment->getAssignmentType() == dto\KioskAssignmentTypes::EVENTATTENDANCEKIOSK )
     {
       $assignment->getEvent();
       $assignmentJSON = $assignment->toJSON();

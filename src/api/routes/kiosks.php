@@ -7,12 +7,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 $app->group('/kiosks', function () {
 
     $this->get('/', function ($request, $response, $args) {
-        $Kiosks = KioskDeviceQuery::create()
-            ->joinWithKioskAssignment(Criteria::LEFT_JOIN)
-            ->useKioskAssignmentQuery()
-            ->joinWithEvent(Criteria::LEFT_JOIN)
-            ->endUse()
-            ->find();
+        $Kiosks = KioskDeviceQuery::create() ->find();
         return $response->write($Kiosks->toJSON());
     });
 

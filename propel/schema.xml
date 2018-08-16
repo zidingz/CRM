@@ -768,31 +768,11 @@
       <column name="kdev_lastHeartbeat" phpName="LastHeartbeat" type="LONGVARCHAR" description="Last time the kiosk sent a heartbeat" />
       <column name="kdev_Accepted" phpName="Accepted" type="BOOLEAN" description="Has the admin accepted the kiosk after initial registration?" />
       <column name="kdev_PendingCommands" phpName="PendingCommands" type="LONGVARCHAR" description="Commands waiting to be sent to the kiosk" />
+      <column name="kdev_AssignmentData" phpName="AssignmentData" type="LONGVARCHAR" description="Supporting data for the assignment type of this kiosk" />
       <index name="kdev_ID">
         <index-column name="kdev_ID"/>
       </index>
      </table>
-
-
-    <table name="kioskassginment_kasm" idMethod="native" phpName="KioskAssignment">
-      <column name="kasm_ID" phpName="Id" type="INTEGER" size="9" sqlType="mediumint(9) unsigned" primaryKey="true" autoIncrement="true" required="true"/>
-      <column name="kasm_kdevId" phpName="KioskId" type="INTEGER" size="9" />
-      <column name="kasm_AssignmentType" phpName="AssignmentType" type="INTEGER" size="9" description="The kiosk's current role."/>
-      <column name="kasm_EventId" phpName="EventId" type="INTEGER" size="9" description="Optional.  If the current role is for event check-in, populate this value" />
-      <index name="kasm_ID">
-        <index-column name="kasm_ID"/>
-      </index>
-
-      <foreign-key foreignTable="kioskdevice_kdev">
-        <reference local="kasm_kdevId" foreign="kdev_ID"/>
-      </foreign-key>
-
-      <foreign-key foreignTable="events_event">
-        <reference local="kasm_EventId" foreign="event_id"/>
-      </foreign-key>
-     </table>
-
-
 
     <table name="tokens" idMethod="native" phpName="Token">
         <column name="token" phpName="Token" type="VARCHAR" primaryKey="true" required="true"/>
