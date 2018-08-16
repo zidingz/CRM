@@ -69,6 +69,18 @@ function getDepositById(Request $request, Response $response, array $args) {
         $_SESSION['iCurrentDeposit'] = $thisDeposit->getId();
         SessionUser::getUser()->setCurrentDeposit($thisDeposit->getId());
         SessionUser::getUser()->save();
+        
+        
+        if ($thisDeposit->getType() == 'eGive') {
+          $pageArgs['AddPaymentButton'] = '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=".$thisDeposit->getId()."&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
+        } else {
+          $pageArgs['AddPaymentButton'] = '<input type=button class="btn btn-success" value="'.gettext('Add Payment')."\" name=AddPayment onclick=\"javascript:document.location='PledgeEditor.php?CurrentDeposit=".$thisDeposit->getId()."&PledgeOrPayment=Payment&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
+        }
+        if ($thisDeposit->getType() == 'BankDraft' || $thisDeposit->getType() == 'CreditCard') {
+          $pageArgs['AddPaymentButton'] = '<input type="submit" class="btn btn-success" value="' . gettext('Load Authorized Transactions'). '" name="DepositSlipLoadAuthorized">'.
+          '<input type="submit" class="btn btn-warning" value="'.gettext('Run Transactions').'" name="DepositSlipRunTransactions">';
+        }
+        
         return $renderer->render($response, 'depositEditor.php', $pageArgs);
     }
 }

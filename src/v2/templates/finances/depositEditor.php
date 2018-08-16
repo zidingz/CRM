@@ -51,32 +51,13 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
       <div class="box-header with-border">
         <h3 class="box-title"><?php echo gettext('Deposit Summary: '); ?></h3>
       </div>
-      <div class="box-body">
-        <div class="col-lg-6">
-          <canvas id="type-donut" style="height:250px"></canvas>
-          <ul style="margin:0px; border:0px; padding:0px;">
-          <?php
-          // Get deposit totals
-          echo '<li><b>TOTAL ('.$thisDeposit->getPledges()->count().'):</b> $'.$thisDeposit->getVirtualColumn('totalAmount').'</li>';
-                        if ($thisDeposit->getCountCash()) {
-                            echo '<li><b>CASH ('.$thisDeposit->getCountCash().'):</b> $'.$thisDeposit->getTotalCash().'</li>';
-                        }
-                        if ($thisDeposit->getCountChecks()) {
-                            echo '<li><b>CHECKS ('.$thisDeposit->getCountChecks().'):</b> $'.$thisDeposit->getTotalChecks().' </li>';
-                        }
-          ?>
-            </ul>
-        </div>
-         <div class="col-lg-6">
-          <canvas id="fund-donut" style="height:250px"></canvas>
-          <ul style="margin:0px; border:0px; padding:0px;">
-          <?php
-          foreach ($thisDeposit->getFundTotals() as $fund) {
-              echo '<li><b>'.$fund['Name'].'</b>: $'.$fund['Total'].'</li>';
-          }
-          ?>
-        </div>
-      </div>
+      <?php 
+      if ($thisDeposit->getVirtualColumn('totalAmount') == 0) {
+        echo $this->fetch('depositSummaryWithoutPayments.php', $data); 
+      }
+      else {
+        echo $this->fetch('depositSummaryWithPayments.php', $data); 
+      }?>
     </div>
   </div>
 </div>
@@ -85,18 +66,8 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
     <h3 class="box-title"><?php echo gettext('Payments on this deposit slip:'); ?></h3>
     <div class="pull-right">
       <?php
-      if (!$thisDeposit->getClosed()) {
-          if ($thisDeposit->getType() == 'eGive') {
-              echo '<input type=button class=btn value="'.gettext('Import eGive')."\" name=ImporteGive onclick=\"javascript:document.location='eGive.php?DepositSlipID=".$thisDeposit->getId()."&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
-          } else {
-              echo '<input type=button class="btn btn-success" value="'.gettext('Add Payment')."\" name=AddPayment onclick=\"javascript:document.location='PledgeEditor.php?CurrentDeposit=".$thisDeposit->getId()."&PledgeOrPayment=Payment&linkBack=DepositSlipEditor.php?DepositSlipID=".$thisDeposit->getId()."&PledgeOrPayment=Payment&CurrentDeposit=".$thisDeposit->getId()."';\">";
-          }
-          if ($thisDeposit->getType() == 'BankDraft' || $thisDeposit->getType() == 'CreditCard') {
-              ?>
-          <input type="submit" class="btn btn-success" value="<?php echo gettext('Load Authorized Transactions'); ?>" name="DepositSlipLoadAuthorized">
-          <input type="submit" class="btn btn-warning" value="<?php echo gettext('Run Transactions'); ?>" name="DepositSlipRunTransactions">
-          <?php
-          }
+      if ($AddPaymentButton) {
+         echo $AddPaymentButton;
       }
       ?>
     </div>
@@ -127,7 +98,9 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
 
   $(document).ready(function() {
     initPaymentTable();
-    initCharts(pledgeData, fundData);
+    if ($("#type-donut").get(0)) {
+      initCharts(pledgeData, fundData);
+    }
     initDepositSlipEditor();
 
     $('#deleteSelectedRows').click(function() {
