@@ -37,12 +37,12 @@ function getDepositById(Request $request, Response $response, array $args) {
 
     $iDepositSlipID = $args['id'];
     $thisDeposit = ChurchCRM\DepositQuery::create()->findOneById($iDepositSlipID);
-
+   
     if (empty($thisDeposit)) {
         return $response->withRedirect(SystemURLs::getRootPath() . "/v2/deposits");
     }
 
-    if (!SessionUser::getUser()->isFinanceEnabled() || SessionUser::getUser()->getId() == $thisDeposit->getEnteredby()) {
+    if (!SessionUser::getUser()->isFinanceEnabled() && SessionUser::getUser()->getId() != $thisDeposit->getEnteredby()) {
         return $response->withRedirect(SystemURLs::getRootPath());
     } else {
         //todo: handle electronic transactions //Is this the second pass?
