@@ -34,6 +34,7 @@ require __DIR__ . '/routes/calendar/events.php';
 require __DIR__ . '/routes/calendar/calendar.php';
 
 // finance routes
+require __DIR__ . '/routes/finance/finance-general.php';
 require __DIR__ . '/routes/finance/finance-deposits.php';
 require __DIR__ . '/routes/finance/finance-payments.php';
 
