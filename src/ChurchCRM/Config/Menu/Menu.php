@@ -137,10 +137,18 @@ class Menu
 
     private static function getFinancesMenu()
     {
+        $currentDeposit = \ChurchCRM\DepositQuery::Create()->filterById($_SESSION['iCurrentDeposit'])->filterByClosed('no')->findOne();
         $depositsMenu = new MenuItem(gettext("Finances"), "", SystemConfig::getBooleanValue("bEnabledFinance") && SessionUser::getUser()->isFinanceEnabled(), 'fa-bank');
         $depositsMenu->addSubMenu(new MenuItem(gettext("Dashboard"), "v2/finances"));
-        $depositsMenu->addSubMenu(new MenuItem(gettext("Edit Current Deposit Slip"), "v2/deposits/".$_SESSION['iCurrentDeposit'], SessionUser::getUser()->isFinanceEnabled()));
-        $depositsMenu->addCounter(new MenuCounter("iCurrentDeposit", "bg-green", $_SESSION['iCurrentDeposit']));
+        if ($currentDeposit)
+        {
+          $depositsMenu->addSubMenu(new MenuItem(gettext("Edit Current Deposit Slip"), "v2/deposits/".$currentDeposit->getId(), SessionUser::getUser()->isFinanceEnabled()));
+          $depositsMenu->addCounter(new MenuCounter("iCurrentDeposit", "bg-green", $_SESSION['iCurrentDeposit']));
+        }
+        else{
+          $depositsMenu->addSubMenu(new MenuItem(gettext("New Deposit Slip"), "v2/deposits/new", SessionUser::getUser()->isFinanceEnabled()));
+          $depositsMenu->addCounter(new MenuCounter("iCurrentDeposit", "bg-red", $_SESSION['iCurrentDeposit']));
+        }
         $depositsMenu->addSubMenu(new MenuItem(gettext("View All Deposits"), "v2/deposits", SessionUser::getUser()->isFinanceEnabled()));
         $depositsMenu->addSubMenu(new MenuItem(gettext("Reports"), "v2/finances/reports", SessionUser::getUser()->isFinanceEnabled()));
         $adminMenu = new MenuItem(gettext("Admin"), "", SessionUser::isAdmin());
