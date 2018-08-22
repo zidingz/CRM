@@ -8,7 +8,7 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
 
 <div class="row">
   <?php
-  echo $this->fetch('payment-details.php', $data); 
+  echo $this->fetch('payment-details-bank.php', $data); 
   echo $this->fetch('payment-fund-split.php', $data); 
   ?>
   
