@@ -17,7 +17,7 @@ $app->group('/deposits', function () {
     $this->get('/', 'getDeposits');
     $this->get('', 'getDeposits');
     $this->get('/{id}', 'getDepositById');
-    $this->get('/{id}/newPayment', 'newPayment');
+    $this->get('/{id}/newPayment', 'editPayment');
     $this->get('/{id}/{groupKey}', 'editPayment');
 });
 
@@ -58,7 +58,7 @@ function getDeposits(Request $request, Response $response, array $args) {
 }
 
 function getDepositById(Request $request, Response $response, array $args) {
-    $renderer = new PhpRenderer('templates/finances/');
+    $renderer = new PhpRenderer('templates/finances/DepositEditor');
 
     $iDepositSlipID = $args['id'];
     $thisDeposit = ChurchCRM\DepositQuery::create()->findOneById($iDepositSlipID);
@@ -147,8 +147,8 @@ function GetPledgeTypeData($thisDeposit)
   
 }
 
-function newPayment(Request $request, Response $response, array $args) {
-    $renderer = new PhpRenderer('templates/finances/');
+function editPayment(Request $request, Response $response, array $args) {
+    $renderer = new PhpRenderer('templates/finances/Payment');
 
     $pageArgs = [
         'sRootPath' => SystemURLs::getRootPath(),
@@ -156,7 +156,7 @@ function newPayment(Request $request, Response $response, array $args) {
         'PageJSVars' => []
     ];
 
-    if (!SessionUser::getUser()->isFinance()) {
+    if (!SessionUser::getUser()->isFinanceEnabled()) {
         return $response->withRedirect(SystemURLs::getRootPath());
     } else {
         return $renderer->render($response, 'payment.php', $pageArgs);
