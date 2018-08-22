@@ -8,6 +8,11 @@ use ChurchCRM\dto\SystemConfig;
 use ChurchCRM\DepositQuery;
 use ChurchCRM\SessionUser;
 
+$app->group('/finances', function () {
+    $this->get('/', 'getFinanceDashboard');
+    $this->get('', 'getFinanceDashboard');
+});
+
 $app->group('/deposits', function () {
     $this->get('/', 'getDeposits');
     $this->get('', 'getDeposits');
@@ -15,6 +20,26 @@ $app->group('/deposits', function () {
     $this->get('/{id}/newPayment', 'newPayment');
     $this->get('/{id}/{groupKey}', 'editPayment');
 });
+
+
+
+function getFinanceDashboard(Request $request, Response $response, array $args) {
+    $renderer = new PhpRenderer('templates/finances/');
+
+    $pageArgs = [
+        'sRootPath' => SystemURLs::getRootPath(),
+        'sPageTitle' => gettext('Finances Dashboard'),
+        'PageJSVars' => []
+    ];
+
+    if (!SessionUser::getUser()->isFinance()) {
+        return $response->withRedirect(SystemURLs::getRootPath());
+    } else {
+        return $renderer->render($response, 'dashboard.php', $pageArgs);
+    }
+}
+
+
 
 function getDeposits(Request $request, Response $response, array $args) {
     $renderer = new PhpRenderer('templates/finances/');
