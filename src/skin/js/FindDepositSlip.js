@@ -54,7 +54,7 @@ $(document).ready(function () {
     },
     ajax: {
       url: window.CRM.root + "/api/deposits",
-      dataSrc: "Deposits"
+      dataSrc: ""
     },
     responsive: true,
     "deferRender": true,

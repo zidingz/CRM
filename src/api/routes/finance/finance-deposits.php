@@ -13,11 +13,11 @@ $app->group('/deposits', function () {
         $deposit->setComment($input->depositComment);
         $deposit->setDate($input->depositDate);
         $deposit->save();
-        echo $deposit->toJSON();
+        return $response->withJSON($deposit->toArray());
     });
 
     $this->get('', function ($request, $response, $args) {
-        echo DepositQuery::create()->find()->toJSON();
+        return $response->withJSON(DepositQuery::create()->find()->toArray());
     });
 
     $this->get('/{id:[0-9]+}', function ($request, $response, $args) {
