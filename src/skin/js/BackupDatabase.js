@@ -10,7 +10,7 @@ function doBackup(isRemote)
     endpointURL = 'database/backup';
   }
   var errorflag =0;
-  if ($("input[name=encryptBackup]").is(':checked'))
+  if ($("#encryptBackup").is(':checked'))
   {
     if ($('input[name=pw1]').val() =="")
     {
@@ -30,7 +30,7 @@ function doBackup(isRemote)
     // there are many ways to get this data using jQuery (you can use the class or id also)
     var formData = {
       'BackupType'              : $('input[name=archiveType]:checked').val(),
-      'EncryptBackup'            : $("input[name=encryptBackup]").is(':checked'),
+      'EncryptBackup'            : $("#encryptBackup").is(':checked'),
       'BackupPassword'                  : $('input[name=pw1]').val()
     };
     $("#backupstatus").css("color","orange");
@@ -62,16 +62,32 @@ function doBackup(isRemote)
   }
 }
 
-$('#doBackup').click(function(event) {
-  event.preventDefault();
-  doBackup (0);
+$(document).ready(function() { 
+  $('#doBackup').click(function(event) {
+    event.preventDefault();
+    doBackup (0);
+  });
+
+  $('#doRemoteBackup').click(function(event) {
+    event.preventDefault();
+    doBackup(1);
+  });
+
+  // TODO: this is weird; I shouldn't need both.  
+  // The UI is different also between backup/upgrade 
+  // Look at #4674
+  $("#encryptBackup").on("ifChanged",doRemoteBackupChanged);
+  $("#encryptBackup").on("change",doRemoteBackupChanged);  
 });
 
-$('#doRemoteBackup').click(function(event) {
-  event.preventDefault();
-  doBackup(1);
-});
-
+function doRemoteBackupChanged() {
+  if ($("#encryptBackup").is(':checked')) {
+    $("#BackupPasswordEntry").show()
+  }
+  else {
+    $("#BackupPasswordEntry").hide();
+  }
+}
 function downloadbutton(filename) {
     window.location = window.CRM.root +"/api/database/download/"+filename;
     $("#backupstatus").css("color","green");
