@@ -1,27 +1,9 @@
 <?php
 
-// Include the function library
-require 'Include/Config.php';
-$bSuppressSessionTests = true;
-require 'Include/Functions.php';
-require_once 'Include/Header-function.php';
-
 use ChurchCRM\dto\SystemURLs;
-use ChurchCRM\Utils\RedirectUtils;
 use ChurchCRM\Service\AppIntegrityService;
 
-// Set the page title and include HTML header
-$sPageTitle = gettext('Upgrade ChurchCRM');
-
-if (!$_SESSION['user']->isAdmin()) {
-    RedirectUtils::Redirect('index.php');
-    exit;
-}
-
-require 'Include/HeaderNotLoggedIn.php';
-Header_modals();
-Header_body_scripts();
-
+require SystemURLs::getDocumentRoot() . '/Include/HeaderNotLoggedIn.php';
 ?>
 <div class="col-lg-8 col-lg-offset-2" style="margin-top: 10px">
   <ul class="timeline">
@@ -86,10 +68,8 @@ Header_body_scripts();
         <h3 class="timeline-header"><?= gettext('Step 1: Backup Database') ?> <span id="status1"></span></h3>
         <div class="timeline-body" id="backupPhase" <?= AppIntegrityService::getIntegrityCheckStatus() == gettext("Failed") ? 'style="display:none"' : '' ?>>
           <p><?= gettext('Please create a database backup before beginning the upgrade process.')?></p>
-          <input type="button" class="btn btn-primary" id="doBackup" <?= 'value="'.gettext('Generate Database Backup').'"' ?>>
-          <span id="backupStatus"></span>
-          <div id="resultFiles" style="margin-top:10px">
-          </div>
+          <?php echo $this->fetch('common/BackupPropertiesForm.php', $data); ?>
+          <?php echo $this->fetch('common/BackupStatusForm.php', $data); ?>
         </div>
       </div>
     </li>
@@ -133,7 +113,8 @@ Header_body_scripts();
   </ul>
 </div>
 <script nonce="<?= SystemURLs::getCSPNonce() ?>">
-  $(document).ready(function() {
+$(document).ready(function() {
+  
     $("#fileIntegrityCheckResultsTable").DataTable({
       responsive: true,
       paging:false,
@@ -144,85 +125,53 @@ Header_body_scripts();
       $("#integrityCheckWarning").slideUp();
       $("#backupPhase").show("slow");
     });
-  });
+ 
 
- $("#doBackup").click(function(){
-   $("#status1").html('<i class="fa fa-circle-o-notch fa-spin"></i>');
-   window.CRM.APIRequest({
-      method : 'POST',
-      path : 'database/backup',
-      data : JSON.stringify({
-        'iArchiveType' : 3
-      })
-    })
-    .done(function(data) {
-      var downloadButton = "<button class=\"btn btn-primary\" id=\"downloadbutton\" role=\"button\" onclick=\"javascript:downloadbutton('"+data.BackupDownloadFileName+"')\"><i class='fa fa-download'></i>  "+data.BackupDownloadFileName+"</button>";
-      $("#backupstatus").css("color","green");
-      $("#backupstatus").html("<?= gettext('Backup Complete, Ready for Download.') ?>");
-      $("#resultFiles").html(downloadButton);
-      $("#status1").html('<i class="fa fa-check" style="color:orange"></i>');
-      $("#downloadbutton").click(function(){
-        $("#fetchPhase").show("slow");
-        $("#backupPhase").slideUp();
-        $("#status1").html('<i class="fa fa-check" style="color:green"></i>');
+    $("#fetchUpdate").click(function(){
+      $("#status2").html('<i class="fa fa-circle-o-notch fa-spin"></i>');
+      window.CRM.APIRequest({
+        type : 'GET',
+        path  : 'systemupgrade/downloadlatestrelease',
+      }).done(function(data){
+        $("#status2").html('<i class="fa fa-check" style="color:green"></i>');
+        window.CRM.updateFile=data;
+        $("#updateFileName").text(data.fileName);
+        $("#updateFullPath").text(data.fullPath);
+        $("#releaseNotes").text(data.releaseNotes);
+        $("#updateSHA1").text(data.sha1);
+        $("#fetchPhase").slideUp();
+        $("#updatePhase").show("slow");
       });
-    }).fail(function()  {
-      $("#backupstatus").css("color","red");
-      $("#backupstatus").html("<?= gettext('Backup Error.') ?>");
     });
 
- });
-
- $("#fetchUpdate").click(function(){
-    $("#status2").html('<i class="fa fa-circle-o-notch fa-spin"></i>');
-    window.CRM.APIRequest({
-      type : 'GET',
-      path  : 'systemupgrade/downloadlatestrelease',
-    }).done(function(data){
-      $("#status2").html('<i class="fa fa-check" style="color:green"></i>');
-      window.CRM.updateFile=data;
-      $("#updateFileName").text(data.fileName);
-      $("#updateFullPath").text(data.fullPath);
-      $("#releaseNotes").text(data.releaseNotes);
-      $("#updateSHA1").text(data.sha1);
-      $("#fetchPhase").slideUp();
-      $("#updatePhase").show("slow");
+    $("#applyUpdate").click(function(){
+      $("#status3").html('<i class="fa fa-circle-o-notch fa-spin"></i>');
+      window.CRM.APIRequest({
+        method : 'POST',
+        path : 'systemupgrade/doupgrade',
+        data : JSON.stringify({
+          fullPath: window.CRM.updateFile.fullPath,
+          sha1: window.CRM.updateFile.sha1
+         })
+      }).done(function(data){
+        $("#status3").html('<i class="fa fa-check" style="color:green"></i>');
+        $("#updatePhase").slideUp();
+        $("#finalPhase").show("slow");
+      });
     });
-
- });
-
- $("#applyUpdate").click(function(){
-   $("#status3").html('<i class="fa fa-circle-o-notch fa-spin"></i>');
-   window.CRM.APIRequest({
-      method : 'POST',
-      path : 'systemupgrade/doupgrade',
-      data : JSON.stringify({
-        fullPath: window.CRM.updateFile.fullPath,
-        sha1: window.CRM.updateFile.sha1
-      })
-    }).done(function(data){
-      $("#status3").html('<i class="fa fa-check" style="color:green"></i>');
-      $("#updatePhase").slideUp();
-      $("#finalPhase").show("slow");
+ 
+    $(document).on("click","#downloadbutton",function(){
+      $("#fetchPhase").show("slow");
+      $("#backupPhase").slideUp();
+      $("#status1").html('<i class="fa fa-check" style="color:green"></i>');
     });
- });
+});
 
-function downloadbutton(filename) {
-    window.location = window.CRM.root +"/api/database/download/"+filename;
-    $("#backupstatus").css("color","green");
-    $("#backupstatus").html("<?= gettext('Backup Downloaded, Copy on server removed') ?>");
-    $("#downloadbutton").attr("disabled","true");
-}
 </script>
-
+<script src="<?= SystemURLs::getRootPath() ?>/skin/js/BackupDatabase.js"></script>
+<script src="<?= SystemURLs::getRootPath() ?>/skin/js/CRMJSOM.js"></script>
 <script src="<?= SystemURLs::getRootPath() ?>/skin/external/datatables/pdfmake.min.js"></script>
 <script src="<?= SystemURLs::getRootPath() ?>/skin/external/datatables/vfs_fonts.js"></script>
 <script src="<?= SystemURLs::getRootPath() ?>/skin/external/datatables/datatables.min.js"></script>
 
-<?php
-// Add the page footer
-require 'Include/FooterNotLoggedIn.php';
-
-// Turn OFF output buffering
-ob_end_flush();
-?>
+<?php include SystemURLs::getDocumentRoot() . '/Include/FooterNotLoggedIn.php'; ?>

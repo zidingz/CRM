@@ -9,6 +9,8 @@ use ChurchCRM\Slim\Middleware\Request\Auth\AdminRoleAuthMiddleware;
 $app->group('/admin', function () {
     $this->get('/debug', 'debugPage');
     $this->get('/menus', 'menuPage');
+    $this->get('/backup', 'backupPage');
+    $this->get('/upgrade', 'upgradePage');
 })->add(new AdminRoleAuthMiddleware());
 
 function debugPage(Request $request, Response $response, array $args) {
@@ -33,4 +35,20 @@ function menuPage(Request $request, Response $response, array $args) {
     return $renderer->render($response, 'menus.php', $pageArgs);
 }
 
+function backupPage(Request $request, Response $response, array $args) {
+    $renderer = new PhpRenderer('templates/admin/');
+    $pageArgs = [
+        'sRootPath' => SystemURLs::getRootPath(),
+        'sPageTitle' => gettext('Backup')
+    ];
+    return $renderer->render($response, 'backup.php', $pageArgs);
+}
 
+function upgradePage(Request $request, Response $response, array $args) {
+    $renderer = new PhpRenderer('templates/admin/');
+    $pageArgs = [
+        'sRootPath' => SystemURLs::getRootPath(),
+        'sPageTitle' => gettext('Upgrade')
+    ];
+    return $renderer->render($response, 'upgrade.php', $pageArgs);
+}
