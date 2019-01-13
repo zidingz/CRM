@@ -194,7 +194,7 @@ class Menu
         $menu->addSubMenu(new MenuItem(gettext("System Users"), "UserList.php",SessionUser::isAdmin()));
         $menu->addSubMenu(new MenuItem(gettext("Property Types"), "PropertyTypeList.php",SessionUser::isAdmin()));
         $menu->addSubMenu(new MenuItem(gettext("Restore Database"), "RestoreDatabase.php",SessionUser::isAdmin()));
-        $menu->addSubMenu(new MenuItem(gettext("Backup Database"), "BackupDatabase.php",SessionUser::isAdmin()));
+        $menu->addSubMenu(new MenuItem(gettext("Backup Database"), "v2/admin/backup",SessionUser::isAdmin()));
         $menu->addSubMenu(new MenuItem(gettext("CSV Import"), "CSVImport.php",SessionUser::isAdmin()));
         $menu->addSubMenu(new MenuItem(gettext("CSV Export Records"), "CSVExport.php",SessionUser::getUser()->isCSVExport()));
         $menu->addSubMenu(new MenuItem(gettext("Kiosk Manager"), "KioskManager.php",SessionUser::isAdmin()));

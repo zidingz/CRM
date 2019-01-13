@@ -29,7 +29,7 @@ class LatestReleaseTask implements iTask
   public function getLink()
   {
     if ($_SESSION['user']->isAdmin()) {
-      return SystemURLs::getRootPath() . '/UpgradeCRM.php';
+      return SystemURLs::getRootPath() . '/v2/admin/upgrade';
     } else {
       return 'https://github.com/ChurchCRM/CRM/releases/latest';
     }
