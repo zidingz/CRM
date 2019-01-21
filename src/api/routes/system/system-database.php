@@ -43,7 +43,7 @@ $app->group('/database', function () {
         $input = (object)$request->getParsedBody();
         $BaseName = preg_replace('/[^a-zA-Z0-9\-_]/','', SystemConfig::getValue('sChurchName')). "-" . date(SystemConfig::getValue("sDateFilenameFormat"));
         $BackupType = $input->BackupType;
-        $Backup = new BackupJob($BaseName, $BackupType, SystemConfig::getValue('bBackupExtraneousImages'));
+        $Backup = new BackupJob($BaseName, $BackupType, SystemConfig::getValue('bBackupExtraneousImages'), $input->EncryptBackup, $input->BackupPassword);
         $Backup->Execute();
         $copyStatus = $Backup->CopyToWebDAV(SystemConfig::getValue('sExternalBackupEndpoint'), SystemConfig::getValue('sExternalBackupUsername'), SystemConfig::getValue('sExternalBackupPassword'));
         return $response->withJSON($copyStatus);
