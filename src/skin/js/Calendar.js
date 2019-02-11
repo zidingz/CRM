@@ -653,6 +653,7 @@ window.newCalendarModal = {
 }
 
 function initializeCalendar() {
+  window.CRM.isCalendarLoading  = false;
   //
   // initialize the calendar
   // -----------------------------------------------------------------
@@ -672,7 +673,10 @@ function initializeCalendar() {
     selectHelper: true,
     select: window.NewOrEditEventModal.getNewEventModal,
     eventClick: window.displayEventModal.getDisplayEventModal,
-    locale: window.CRM.lang
+    locale: window.CRM.lang,
+    loading: function(isLoading, view){ 
+      window.CRM.isCalendarLoading = isLoading;
+    }
   });
 };
 
