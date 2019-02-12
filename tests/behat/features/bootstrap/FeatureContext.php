@@ -73,5 +73,19 @@ class FeatureContext extends MinkContext
         $this->getSession()->wait(3000, 'window.CRM.isCalendarLoading === false');
    }
 
+   /** 
+    * Fill in CKEditor textbox with
+    *
+    * @Then /^I fill in CKEditor "([^"]*)" with "([^"]*)"$/
+    */
+   public function iFillInCKEditor($CKEditor, $Content) {
+    $this->getSession()->wait(3000, "CKEDITOR.instances['eventPredication'] !== undefined");
+    
+    $javascript = "(function(){
+        CKEDITOR.instances['".$CKEditor."'].setData('" .$Content. "');
+        })()";
+    $this->getSession()->executeScript($javascript);
+   }
+
 }
 

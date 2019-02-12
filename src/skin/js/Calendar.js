@@ -80,7 +80,7 @@ window.NewOrEditEventModal = {
           + '<tr>'
           + "<td class='LabelColumn'><span class='required-field'>*</span>" + i18next.t('Pinned Calendars') + ":</td>"
           + '<td colspan="3" class="TextColumn">'
-          + '<select type="text" multiple="multiple" id="PinnedCalendars" value="39" >'
+          + '<select type="text" multiple="multiple" id="PinnedCalendars" name="PinnedCalendars" value="39" >'
           + '</select>'
           + '</td>'
           + '</tr>'
