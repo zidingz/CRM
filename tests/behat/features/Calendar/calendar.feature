@@ -31,7 +31,7 @@ Feature: Calendar
     And I select "Church Service" from "eventType"
     And I fill in "EventDesc" with "Test Description"
     And I fill in "EventDateRange" with "2019-02-13 8:00 AM - 2019-02-13 8:30 AM"
-    And I fill in select2 "PinnedCalendars" with "Public Calendar"
+    And I fill in select2 "PinnedCalendars" with "Test Calendar"
     And I fill in CKEditor "eventPredication" with "asdF"
     Then I press "Save"
     And I wait for the calendar to load
