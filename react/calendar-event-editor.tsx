@@ -10,7 +10,7 @@ declare global {
     }
     interface Window { 
       // Since TypeScript requires a definition for all methods, let's tell it how to handle the javascript objects already in the page 
-      showEventForm(object): void,
+      showEventForm(event: any, jsEvent: any): void,
       showNewEventForm(start: Moment,end: Moment): void,
       CRM: {
         // we need to access this method of CRMJSOM, so let's tell TypeScript how to use it
@@ -25,13 +25,14 @@ declare global {
     }
 }
 
-window.showEventForm = function(event) {
+window.showEventForm = function(event,jsEvent) {
+    jsEvent.preventDefault();
     const unmount = function() {
         ReactDOM.unmountComponentAtNode( document.getElementById('calendar-event-react-app'));
         window.CRM.refreshAllFullCalendarSources()
     }
     unmount();
-    ReactDOM.render(<ExistingEvent onClose={unmount} eventId={event.id}/>, document.getElementById('calendar-event-react-app'));
+    ReactDOM.render(<ExistingEvent onClose={unmount} eventId={event.id}/>, document.getElementById('calendar-event-react-app'));   
 }
 
 function FullCalendarToLocalizedDate(input:Moment) : Date {

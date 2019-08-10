@@ -49,6 +49,34 @@ const EventPropertiesViewer: React.FunctionComponent<{ event: CRMEvent, calendar
         </tr>
         <tr>
           <td>
+          {window.i18next.t('Location')}
+            </td>
+          <td>
+            { 
+              (() => {
+                if (event.LocationId != null) {
+                  return (event.LocationId );
+                }
+              })()
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>
+          {window.i18next.t('Event URL')}
+            </td>
+          <td>
+            { 
+              (() => {
+                if (event.URL != null) {
+                  return (<a href={event.URL} target="_blank">{event.URL}</a> );
+                }
+              })()
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>
           {window.i18next.t('Pinned Calendars')}
           </td>
           <td>

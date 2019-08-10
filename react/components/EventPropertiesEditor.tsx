@@ -69,6 +69,24 @@ const EventPropertiesEditor: React.FunctionComponent<{ event: CRMEvent, calendar
           </td>
         </tr>
         <tr>
+          <td>
+          {window.i18next.t('Location')}
+          </td>
+          <td>
+            <input name="LocationId" value={event.LocationId} onChange={changeHandler} placeholder={window.i18next.t("Event Location Id")}/>
+
+          </td>
+        </tr>
+        <tr>
+          <td>
+          {window.i18next.t('URL')}
+          </td>
+          <td>
+            <input name="URL" value={event.URL} onChange={changeHandler} placeholder={window.i18next.t("Event URL")}/>
+
+          </td>
+        </tr>
+        <tr>
           <td className="LabelColumn">
           <span>{window.i18next.t('Pinned Calendars')}</span>
           <span className={event.PinnedCalendars.length ==0 ? "RequiredFormFieldUnsatisfied" : "RequiredFormFieldSatisfied"}>{window.i18next.t('This field is required')}</span>
