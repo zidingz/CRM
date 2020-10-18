@@ -78,8 +78,7 @@
     "languageCode": "en",
     "countryCode": "CA",
     "dataTables": "English",
-    "fullCalendar" : true,
-    "fullCalendarLocale" : "en-ca",
+    "fullCalendar" : false,
     "datePicker": false,
     "select2": false
   },
