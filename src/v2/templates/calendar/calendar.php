@@ -23,12 +23,12 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
       <li><a data-toggle="tab" href="#systemCalendars">System</a></li>
     </ul>
     <div class="tab-content" style="height:600px; overflow-y: scroll">
-       
+
       <div class="tab-pane fade in active"  id="userCalendars"></div>
       <div class="tab-pane fade" id="systemCalendars" ></div>
-      
+
     </div>
-    
+
   </div>
 </div>
 
@@ -38,10 +38,10 @@ require SystemURLs::getDocumentRoot() . '/Include/Header.php';
   window.CRM.calendarJSArgs = <?= json_encode($calendarJSArgs) ?>;
 </script>
 
-<script src="<?= SystemURLs::getRootPath() ?>/skin/js-react/calendar-event-editor-app.js"></script>
+<script src="<?= SystemURLs::getRootPath() ?>/skin/dist/calendar-event-editor-app.js"></script>
 <script src="<?= SystemURLs::getRootPath() ?>/skin/external/ckeditor/ckeditor.js"></script>
 <script src="<?= SystemURLs::getRootPath() ?>/skin/js/Calendar.js" ></script>
 
-<?php 
+<?php
 require SystemURLs::getDocumentRoot() . '/Include/Footer.php';
 ?>

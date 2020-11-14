@@ -49,7 +49,7 @@ src/logs/*.log
 error.log
 
 nbproject/*
-/src/skin/js-react/
+/src/skin/dist/
 .DS_Store
 
 src/Upgrade/*
