@@ -15,7 +15,7 @@ context('Finance Deposits', () => {
         cy.get('#depositComment').click();
         cy.get('#depositComment').type('Selenium Test Deposit');
         cy.get('#addNewDeposit').click();
-
+        cy.wait(2000);
         cy.contains('Selenium Test Deposit');
 
     });
