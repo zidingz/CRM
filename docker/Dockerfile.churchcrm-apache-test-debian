@@ -2,12 +2,21 @@ FROM  php:7.4.13-apache
 LABEL maintainer="george@dawouds.com"
 
 RUN apt-get update && \
-    apt-get install -y gettext
+    apt-get install -y \
+        libxml2-dev \
+        gettext \
+        libpng-dev \
+        libzip-dev \
+        libfreetype6-dev \
+        libmcrypt-dev \
+        libpng-dev \
+        libjpeg-dev \
+        libpng-dev
 
 RUN docker-php-ext-install -j$(nproc) xml exif pdo_mysql gettext iconv mysqli zip
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# RUN    docker-php-ext-install -j$(nproc) gd
+RUN    docker-php-ext-install -j$(nproc) gd
 
 COPY ./apache/default.conf /etc/apache2/apache2.conf
 
