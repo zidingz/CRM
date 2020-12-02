@@ -30,7 +30,6 @@ cache:
 before_install:
  - nvm install v14.15.0
  - sudo gem install sass -v 3.4.25
- - chmod +x ./travis-ci/*.sh
  - chmod +x ./scripts/*.sh
  - cp BuildConfig.json.example BuildConfig.json
 
