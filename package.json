@@ -37,7 +37,7 @@
         "datadictionary": "php src/vendor/propel/propel/bin/propel.php --config-dir=propel datadictionary:generate",
         "composer-install": "cd src/ && composer install && cd .. && grunt lineending",
         "composer-update": " cd src/ && composer update && grunt lineending",
-        "test": "node_modules/cypress/bin/cypress run",
+        "test": "node_modules/cypress/bin/cypress run --record --key 0538ff26-3c09-413a-bddd-7f8f3893bb65\n",
         "build-react": "webpack",
         "restore-demo-db": "php scripts/restore-db.php demo",
         "restore-empty-db": "php scripts/restore-db.php",
