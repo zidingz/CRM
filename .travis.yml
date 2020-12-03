@@ -41,7 +41,7 @@ install:
 before_script:
  - cp $TRAVIS_BUILD_DIR/travis-ci/Config.php $TRAVIS_BUILD_DIR/src/Include/Config.php
  - cp $TRAVIS_BUILD_DIR/travis-ci/cypress.json $TRAVIS_BUILD_DIR/cypress.json
- - docker-compose -f docker/docker-compose.test.yaml up -d
+ - npm run start
 
 # execute tests
 script:
