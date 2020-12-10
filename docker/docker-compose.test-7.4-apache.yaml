@@ -18,7 +18,7 @@ services:
   churchcrm:
     build:
       context: .
-      dockerfile: Dockerfile.churchcrm-test-debian
+      dockerfile: Dockerfile.churchcrm-test-7.4-debian
     volumes:
       - ../src:/var/www/html
       - ..:/home/ChurchCRM

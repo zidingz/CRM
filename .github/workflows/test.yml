@@ -46,7 +46,7 @@ jobs:
 
     - name: Setup Docker
       run: |
-        docker-compose -f docker/docker-compose.test-apache.yaml up -d
+        docker-compose -f docker/docker-compose.test-${{ matrix.php }}-apache.yaml up -d
 
     - name: E2E Tests
       run: npm run test
