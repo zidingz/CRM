@@ -40,6 +40,7 @@ jobs:
 
   build:
     steps:
+      runs-on: ubuntu-latest
       - name: Update PHP
         run: |
           npm run composer-install
@@ -53,11 +54,13 @@ jobs:
         run: npm run orm-gen
 
   deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Dcoker
         run: docker --version
 
   test:
+    runs-on: ubuntu-latest
     steps:
       - name: Cypress Test
         run: npm run test
