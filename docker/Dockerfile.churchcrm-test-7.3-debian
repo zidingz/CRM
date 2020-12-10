@@ -14,7 +14,7 @@ RUN apt-get update && \
         libpng-dev
 
 RUN docker-php-ext-install -j$(nproc) xml exif pdo_mysql gettext iconv mysqli zip
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+
 
 RUN    docker-php-ext-install -j$(nproc) gd
 
