@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-    - 'build/**'
+    - 'actions/**'
 
 env:
   node_version: 14
