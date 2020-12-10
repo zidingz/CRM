@@ -3,7 +3,8 @@ name: Test
 on:
   push:
     branches:
-    - 'actions/**'
+  pull_request:
+    branches:
 
 env:
   node_version: 14
