@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.3', '7.4']
+        php: [ '7.4', '7.3']
     name: PHP ${{ matrix.php }} Build & Test
     steps:
     - name: Setup PHP
@@ -44,12 +44,17 @@ jobs:
     - name: Build App ${{ matrix.php }}
       run: npm run deploy
 
-    - name: Setup Docker
+    - name: Setup Docker Server
       run: |
+        cp travis-ci/Config.php src/Include/Config.php
         docker-compose -f docker/docker-compose.test-${{ matrix.php }}-apache.yaml up -d
 
     - name: E2E Tests
-      run: npm run test
+      run: |
+        http://localhost/api/public/echo
+        cp travis-ci/cypress.json cypress.json
+        npm run test
+
 
   deploy:
     name: deploy to demo site
