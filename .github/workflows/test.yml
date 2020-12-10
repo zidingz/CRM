@@ -51,10 +51,9 @@ jobs:
 
     - name: E2E Tests
       run: |
-        http://localhost/api/public/echo
+        wget http://localhost/api/public/echo
         cp travis-ci/cypress.json cypress.json
         npm run test
-
 
   deploy:
     name: deploy to demo site
