@@ -10,9 +10,17 @@ env:
   node_version: 14
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.3', '7.4']
+    name: PHP ${{ matrix.php }} sample
     steps:
+    - name: Setup PHP
+      uses: nanasess/setup-php@master
+      with:
+        php-version: ${{ matrix.php }}
     - uses: actions/checkout@v2.3.2
       with:
         # fetch full history so things like auto-changelog work properly
@@ -33,29 +41,9 @@ jobs:
       id: package-version
       uses: martinbeentjes/npm-get-version-action@master
 
-    - name: Update JS
+    - name: Build App
       run: |
-        npm install
-        npm run build-react
-
-    - name: PHP
-      run: php -version
-
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update PHP
-        run: |
-          npm run composer-install
-          npm run composer-update
-          npm run orm-gen
-
-      - name: NPM Audit
-        run: npm run audit fix --only=prod
-
-      - name: ORM Tasks
-        run: npm run orm-gen
+        npm run deploy
 
   deploy:
     needs: build
