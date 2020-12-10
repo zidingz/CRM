@@ -38,7 +38,7 @@ jobs:
         npm install
         npm run build-react
 
-    build:
+    build-x:
       - name: Update PHP
         run: |
           npm run composer-install
