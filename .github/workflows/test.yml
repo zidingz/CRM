@@ -38,7 +38,11 @@ jobs:
         npm install
         npm run build-react
 
+    - name: PHP
+      run: php -version
+
   build:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Update PHP
@@ -54,12 +58,14 @@ jobs:
         run: npm run orm-gen
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Dcoker
         run: docker --version
 
   test:
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Cypress Test
