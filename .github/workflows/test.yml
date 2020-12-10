@@ -38,7 +38,8 @@ jobs:
         npm install
         npm run build-react
 
-    build-x:
+  build:
+    steps:
       - name: Update PHP
         run: |
           npm run composer-install
@@ -51,11 +52,12 @@ jobs:
       - name: ORM Tasks
         run: npm run orm-gen
 
-    deploy-docker:
+  deploy:
+    steps:
       - name: Dcoker
         run: docker --version
 
-
-    test:
+  test:
+    steps:
       - name: Cypress Test
         run: npm run test
