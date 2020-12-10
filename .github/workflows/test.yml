@@ -50,7 +50,7 @@ jobs:
         docker-compose -f docker/docker-compose.test-apache.yaml up -d
 
     - name: E2E Tests
-       run: npm run test
+      run: npm run test
 
   deploy:
     name: deploy to demo site
