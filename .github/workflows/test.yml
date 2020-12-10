@@ -37,6 +37,7 @@ jobs:
       run: |
         npm install
         npm run build-react
+
     build:
       - name: Update PHP
         run: |
@@ -50,7 +51,7 @@ jobs:
       - name: ORM Tasks
         run: npm run orm-gen
 
-    deploy:
+    deploy-docker:
       - name: Dcoker
         run: docker --version
 
