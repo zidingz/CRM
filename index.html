@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta http-equiv="pragma" content="no-cache">-->
+    <meta http-equiv="Content-Type" content="text/html">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="/skin/external/bootstrap/bootstrap.min.css">
+    <!-- Custom ChurchCRM styles -->
+    <link rel="stylesheet" href="/skin/churchcrm.min.css">
+
+    <!-- jQuery JS -->
+    <script src="/skin/external/jquery/jquery.min.js"></script>
+
+    <title>ChurchCRM: Login</title>
+
+</head>
+<body class="hold-transition login-page">
+
+  <script nonce="cmyEB/Ay+02fNtDzurwuXA=="  >
+    window.CRM = {
+      root: "",
+      churchWebSite:""
+    };
+  </script>
+<div class="login-box" id="Login">
+    <div class="login-logo">
+        Church<b>CRM</b>
+    </div>
+
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+        <p class="login-box-msg">
+            <b>Main St. Cathedral</b><br/>
+            Please Login        </p>
+
+        
+        <form class="form-signin" role="form" method="post" name="LoginForm" action="/session/begin">
+            <div class="form-group has-feedback">
+                <input type="text" id="UserBox" name="User" class="form-control" value=""
+                   placeholder="Email/Username" required autofocus>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" id="PasswordBox" name="Password" class="form-control" data-toggle="password"
+                   placeholder="Password" required autofocus>
+                <br/>
+                                    <span class="text-right"><a
+                                href="/session/forgot-password/reset-request">I forgot my password</a></span>
+                                </div>
+            <div class="row">
+                <!-- /.col -->
+                <div class="col-xs-5">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat"><i
+                                class="fa fa-sign-in"></i> Login</button>
+                </div>
+            </div>
+        </form>
+
+                    <a href="/external/register/" class="text-center btn bg-olive"><i
+                        class="fa fa-user-plus"></i> Register a new Family</a><br>
+                    <!--<a href="external/family/verify" class="text-center">Verify Family Info</a> -->
+
+    </div>
+
+<!-- /.login-box-body -->
+</div>
