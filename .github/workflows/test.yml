@@ -43,19 +43,6 @@ jobs:
     - name: Build ${{ steps.package-version.outputs.current-version}} on ${{ matrix.php }}
       run: npm run deploy
 
-    - name: upload info
-      uses: actions/upload-artifact@v2
-      with:
-        name: server-debug.html
-        path: info.php
-
-    - name: Setup Cypress and run Tests
-      run: |
-        wget http://localhost/
-        wget http://localhost/api/public/echo
-        cp test/Docker-cypress.json cypress.json
-        npm run test
-
     - name: Package files
       run: npm run package
 
@@ -104,7 +91,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: install cypress
         run: npm install cypress --save-dev
-        
+
 
   docker:
     name: Deploy to demo site
