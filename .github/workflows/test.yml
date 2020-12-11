@@ -30,7 +30,7 @@ jobs:
         # setting a registry enables the NODE_AUTH_TOKEN env variable where we can set an npm token.  REQUIRED
         registry-url: 'https://registry.npmjs.org'
 
-    - name: Checkout ChurchCRM Cdoe
+    - name: Checkout ChurchCRM Code
       uses: actions/checkout@v2.3.2
       with:
         # fetch full history so things like auto-changelog work properly
@@ -58,6 +58,10 @@ jobs:
         name: ChurchCRM-${{steps.package-version.outputs.current-version}}-${{ matrix.php }}.tar.gz
         path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.tar.gz
 
+    - name: Setup Var for Next jobs
+      id: version_step
+      run: echo "::set-output name=version_number::${{steps.package-version.outputs.current-version}}"
+
   heroku:
     name: Deploy to Heroku
     runs-on: ubuntu-latest
@@ -65,10 +69,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: ChurchCRM-${{steps.package-version.outputs.current-version}}-7.4.tar.gz
+          name: ChurchCRM-${{jobs.build.steps.version_step.outputs.version_number}}-7.4.tar.gz
 
       - name: Unzip
-        run: tar -xvf ChurchCRM-${{steps.package-version.outputs.current-version}}-7.4.tar.gz
+        run: tar -xvf ChurchCRM-${{jobs.build.steps.version_step.outputs.version_number}}-7.4.tar.gz
 
       - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
         with:
