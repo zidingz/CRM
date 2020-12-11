@@ -70,8 +70,7 @@ jobs:
 
       - name: Unzip
         run: |
-          ls -R
-          tar -xvf ChurchCRM-7.4.tar.gz
+          tar -xvf *.tar.gz
 
       - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
         with:
