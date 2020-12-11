@@ -70,15 +70,16 @@ jobs:
 
       - name: Unzip
         run: |
-          tar -xvf target/*.tar.gz target/churchcrm
-          ls target -ls
+          cd target
+          tar -xvf *.tar.gz
+          ls -ls
 
       - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "churchcrm"
           heroku_email: "george@dawouds.com"
-          appdir: churchcrm
+          appdir: target/churchcrm
 
 
   e2e:
