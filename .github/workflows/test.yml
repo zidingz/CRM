@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: PHP ${{ env.php_version }} Build & Package
+    name: Build & Package
     steps:
 
     - name: Setup PHP ${{ env.php_version }}
