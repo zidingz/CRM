@@ -52,7 +52,7 @@ jobs:
     - name: Setup Cypress and run Tests
       run: |
         wget http://localhost/api/public/echo
-        cp travis-ci/cypress.json cypress.json
+        cp test/Docker-cypress.json cypress.json
         npm run test
 
   deploy:
