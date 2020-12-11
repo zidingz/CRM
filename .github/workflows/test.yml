@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         php: [ '7.4', '7.3']
-    name: PHP ${{ matrix.php }} Build & Test
+    name: PHP ${{ matrix.php }} Build & Package
     steps:
 
     - name: Setup PHP ${{ matrix.php }}
@@ -42,17 +42,6 @@ jobs:
 
     - name: Build ${{ steps.package-version.outputs.current-version}} on ${{ matrix.php }}
       run: npm run deploy
-
-    - name: Setup Docker Server
-      run: |
-        cp test/Docker-Config.php src/Include/Config.php
-        docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml up -d
-        docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml logs
-
-    - name: debug server
-      run: |
-        cp test/info.php src/info.php
-        wget http://localhost/
 
     - name: upload info
       uses: actions/upload-artifact@v2
@@ -83,9 +72,34 @@ jobs:
         path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.tar.gz
 
   deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ChurchCRM-${{steps.package-version.outputs.current-version}}-7.4.tar.gz
+
+      - name: Unzip
+        run: tar -xvf ChurchCRM-${{steps.package-version.outputs.current-version}}-7.4.tar.gz
+
+      - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "ChurchCRM CI"
+          heroku_email: "george@dawouds.com"
+          appdir: churchcrm
+  docker:
     name: deploy to demo site
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Dcoker
-        run: docker --version
+      - name: Setup Docker Server
+        run: |
+          cp test/Docker-Config.php src/Include/Config.php
+          docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml up -d
+          docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml logs
+
+      - name: debug server
+        run: |
+          cp test/info.php src/info.php
+          wget http://localhost/
