@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.4', '7.3']
+        php: [ '7.4']
     name: PHP ${{ matrix.php }} Build & Test
     steps:
 
@@ -47,7 +47,7 @@ jobs:
     - name: Setup Docker Server
       run: |
         cp travis-ci/Config.php src/Include/Config.php
-        docker-compose -f docker/docker-compose.test-${{ matrix.php }}-apache.yaml up -d
+        docker-compose -f docker/docker-compose.${{ matrix.php }}-apache.yaml up -d
 
     - name: Setup Cypress and run Tests
       run: |
