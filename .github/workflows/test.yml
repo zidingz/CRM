@@ -17,14 +17,12 @@ jobs:
         php: [ '7.4', '7.3']
     name: PHP ${{ matrix.php }} Build & Test
     steps:
-    - name: Setup PHP
+
+    - name: Setup PHP ${{ matrix.php }}
       uses: nanasess/setup-php@master
       with:
         php-version: ${{ matrix.php }}
-    - uses: actions/checkout@v2.3.2
-      with:
-        # fetch full history so things like auto-changelog work properly
-        fetch-depth: 0
+
     - name: Use Node.js ${{ env.node_version }}
       uses: actions/setup-node@v2-beta
       with:
@@ -32,14 +30,16 @@ jobs:
         # setting a registry enables the NODE_AUTH_TOKEN env variable where we can set an npm token.  REQUIRED
         registry-url: 'https://registry.npmjs.org'
 
-    - name: Declare some variables
-      id: vars
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+    - name: Checkout ChurchCRM Cdoe
+      uses: actions/checkout@v2.3.2
+      with:
+        # fetch full history so things like auto-changelog work properly
+        fetch-depth: 0
 
     - name: get-npm-version
-      id: package-version
       uses: martinbeentjes/npm-get-version-action@master
+      id: package-version
+      run: echo ${{ steps.package-version.outputs.current-version}}
 
     - name: Build App ${{ matrix.php }}
       run: npm run deploy
@@ -49,7 +49,7 @@ jobs:
         cp travis-ci/Config.php src/Include/Config.php
         docker-compose -f docker/docker-compose.test-${{ matrix.php }}-apache.yaml up -d
 
-    - name: E2E Tests
+    - name: Setup Cypress and run Tests
       run: |
         wget http://localhost/api/public/echo
         cp travis-ci/cypress.json cypress.json
