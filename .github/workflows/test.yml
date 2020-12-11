@@ -8,18 +8,20 @@ on:
 
 env:
   node_version: 14
-  php_version: 7.4
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build & Package
+    strategy:
+      matrix:
+        php: [ '7.4', '7.3']
+    name: PHP ${{ matrix.php }} Build & Package
     steps:
 
-    - name: Setup PHP ${{ env.php_version }}
+    - name: Setup PHP ${{ matrix.php }}
       uses: nanasess/setup-php@master
       with:
-        php-version: ${{ env.php_version }}
+        php-version: ${{ matrix.php }}
 
     - name: Use Node.js ${{ env.node_version }}
       uses: actions/setup-node@v2-beta
@@ -38,7 +40,7 @@ jobs:
       uses: martinbeentjes/npm-get-version-action@master
       id: package-version
 
-    - name: Build ${{ steps.package-version.outputs.current-version}} on ${{ env.php_version }}
+    - name: Build ${{ steps.package-version.outputs.current-version}} on ${{ matrix.php }}
       run: npm run deploy
 
     - name: Package files
@@ -47,18 +49,14 @@ jobs:
     - name: Upload Zip file
       uses: actions/upload-artifact@v2
       with:
-        name: ChurchCRM-${{steps.package-version.outputs.current-version}}-${{ env.php_version }}.zip
+        name: ChurchCRM-${{ matrix.php }}.zip
         path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.zip
 
     - name: Upload Tar file
       uses: actions/upload-artifact@v2
       with:
-        name: ChurchCRM-${{steps.package-version.outputs.current-version}}-${{ env.php_version }}.tar.gz
+        name: ChurchCRM-${{ matrix.php }}.tar.gz
         path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.tar.gz
-
-    - name: Setup Var for Next jobs
-      id: version_step
-      run: echo "::set-output name=version_number::${{steps.package-version.outputs.current-version}}"
 
   heroku:
     name: Deploy to Heroku
@@ -67,10 +65,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: ChurchCRM-${{needs.build.outputs.version_number}}-${{ env.php_version }}.tar.gz
+          name: ChurchCRM-7.4.tar.gz
 
       - name: Unzip
-        run: tar -xvf ChurchCRM-${{needs.build.outputs.version_number}}-${{ env.php_version }}.tar.gz
+        run: tar -xvf ChurchCRM-7.4.tar.gz
 
       - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
         with:
