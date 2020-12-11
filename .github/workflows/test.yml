@@ -47,9 +47,7 @@ jobs:
       run: |
         cp test/Docker-Config.php src/Include/Config.php
         docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml up -d
-
-    - name: Package files
-      run: npm run package
+        docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml logs
 
     - name: debug server
       run: |
@@ -62,7 +60,6 @@ jobs:
         name: server-debug.html
         path: info.php
 
-
     - name: Setup Cypress and run Tests
       run: |
         wget http://localhost/
@@ -70,12 +67,20 @@ jobs:
         cp test/Docker-cypress.json cypress.json
         npm run test
 
-    - name: Upload math result for job 1
+    - name: Package files
+      run: npm run package
+
+    - name: Upload Zip file
       uses: actions/upload-artifact@v2
       with:
         name: ChurchCRM-${{steps.package-version.outputs.current-version}}-${{ matrix.php }}.zip
         path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.zip
 
+    - name: Upload Tar file
+      uses: actions/upload-artifact@v2
+      with:
+        name: ChurchCRM-${{steps.package-version.outputs.current-version}}-${{ matrix.php }}.tar.gz
+        path: target/ChurchCRM-${{steps.package-version.outputs.current-version}}.tar.gz
 
   deploy:
     name: deploy to demo site
