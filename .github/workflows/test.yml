@@ -46,8 +46,8 @@ jobs:
 
     - name: Setup Docker Server
       run: |
-        cp travis-ci/Config.php src/Include/Config.php
-        docker-compose -f docker/docker-compose.${{ matrix.php }}-apache.yaml up -d
+        cp test/Docker-Config.php src/Include/Config.php
+        docker-compose -f docker/docker-compose-apache-${{ matrix.php }}.yaml up -d
 
     - name: Setup Cypress and run Tests
       run: |
