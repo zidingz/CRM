@@ -53,7 +53,7 @@ $URL[0] = 'http://localhost/';
 // the URL.  See example $URL[4]
 
 // Sets which PHP errors are reported see http://php.net/manual/en/errorfunc.constants.php
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 
 //
 // SETTINGS END HERE.  DO NOT MODIFY BELOW THIS LINE
