@@ -29,11 +29,8 @@ jobs:
     - name: Build Software
       run: npm run build
 
-    - name: Start containers
-      run: npm run docker-test-start
-
-    - name: Run tests
-      run: npm run test
+    - name: Start Docker and Run tests
+      run: npm run test-via-docker
 
     - name: Stop containers
       if: always()
