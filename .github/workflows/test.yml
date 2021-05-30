@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - test/**
+  pull_request:
+    branches:
+      - test/**
+
+env:
+  node_version: 14
+
+jobs:
+  install_n_gen:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.2
+      with:
+        # fetch full history so things like auto-changelog work properly
+        fetch-depth: 0
+    - name: Use Node.js ${{ env.node_version }}
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: ${{ env.node_version }}
+        # setting a registry enables the NODE_AUTH_TOKEN env variable where we can set an npm token.  REQUIRED
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Build Software
+      run: npm run build
+
+    - name: Start containers
+      run: npm run docker-test-start
+
+    - name: Run tests
+      run: npm run test
+
+    - name: Stop containers
+      if: always()
+      run: npm run docker-test-down
